@@ -4,7 +4,7 @@ return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=127.0.0.1;dbname=sandbox_app',
     'username' => 'root',
-    'password' => '',
+    'password' => '@MyWork@',
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)

@@ -2,103 +2,95 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use Yii;
+use yii\base\Model;
+use yii\web\IdentityInterface;
+
+class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function findIdentity($id)
+    public static function tableName()
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return 'user';
+    }
+   
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['email', 'username', 'password'], 'required'],
+            [['age', 'sex', 'city', 'state', 'created_at', 'deleted', 'status', 'updated_at'], 'safe', 'on' => ['update']],
+            [['email'], 'email'],
+            ['username', 'unique', 'targetClass' => 'app\models\User', 'message' => 'This username has already been taken.'],
+            ['email', 'unique', 'targetClass' => 'app\models\User', 'message' => 'This email has already been taken.'],
+            ['access_token', 'unique', 'targetClass' => 'app\models\User', 'message' => 'Invalid access_token.'],
+            ['email', 'filter', 'filter' => 'trim'],
+            ['username', 'filter', 'filter' => 'trim'],
+            [['name', 'city', 'state'], 'string', 'max' => 50],
+        ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public function attributeLabels()
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
+        return [
+            'id' => 'ID',
+            'email' => 'Email',
+            'password' => 'Password',
+            'access_token' => 'Access Token',
+            'name' => 'Name',
+            'age' => 'Age',
+            'sex' => 'Sex',
+            'city' => 'City',
+            'status' => 'Status',
+            'deleted' => 'Deleted',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+        ];
+    }
 
-        return null;
+    public static function findIdentityByAccessToken($token, $type = null)
+    { 
+       
     }
 
     /**
      * Finds user by username
      *
-     * @param string $username
+     * @param  string      $username
      * @return static|null
      */
-    public static function findByUsername($username)
+    public static function findByUsername($username, $isDelivery = 0)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
+        
+    }
+    
+    public static function findById($id)
+    {
 
-        return null;
     }
 
-    /**
-     * {@inheritdoc}
+    public function getId(){
+
+    }
+
+    public function validateAuthKey($authKey){
+
+    }
+
+    public function getAuthKey(){
+        
+    }
+
+        /**
+     * @inheritdoc
      */
-    public function getId()
+    public static function findIdentity($id)
     {
-        return $this->id;
+        
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
-    }
-
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
-    }
+ 
 }

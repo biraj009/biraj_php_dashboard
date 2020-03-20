@@ -15,6 +15,7 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'wc6eJsmNpBL5dvARwCunUJXJBZYQ1KJw',
+            'enableCsrfValidation' => false,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -51,10 +52,10 @@ $config = [
         //     'rules' => [
         //         [
         //             'class' => 'yii\web\UrlRule',
-        //             'controller' => ['/users'],
+        //             'controller' => ['/login'],
         //             'pluralize' => false,
         //             'patterns' => [
-        //                'GET users-index' => 'users-index', 
+        //                'POST admin-login' => 'admin-login', 
         //             ]
         //         ],
         //     ],
